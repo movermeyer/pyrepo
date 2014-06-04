@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-    This module provides a Repository class, for managing a repository 
-    via its command, and a RepoImporter for contructing Repositories
-    from import paths.
+    This module provides a Repository and a RepoImporter. The Repository
+    allows managing a general repository via its command. A RepoImporter
+    simplifies constructing Repositories from import paths.
 """
 
 from . import hosts
@@ -32,28 +32,28 @@ class Repository(object):
         Arguments are the same as :class:`Command.clone 
         <commands.Command.clone>` arguments.
         """
-        self.command.create(*args, **kwargs)
+        return self.command.create(*args, **kwargs)
 
     def update(self, *args, **kwargs):
         """
         Arguments are the same as :class:`Command.update 
         <commands.Command.update>` arguments.
         """
-        self.command.update(*args, **kwargs)
+        return self.command.update(*args, **kwargs)
 
     def tag_list(self, *args, **kwargs):
         """
         Arguments are the same as :class:`Command.tag_list 
         <commands.Command.tag_list>` arguments.
         """
-        self.command.tag_list(*args, **kwargs)
+        return self.command.tag_list(*args, **kwargs)
 
     def ping(self, *args, **kwargs):
         """
         Arguments are the same as :class:`Command.ping 
         <commands.Command.ping>` arguments.
         """
-        self.command.ping(*args, **kwargs)
+        return self.command.ping(*args, **kwargs)
 
 
 class RepoImporter(object):

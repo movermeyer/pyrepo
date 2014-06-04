@@ -5,9 +5,10 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
+  - "3.4"
   - "pypy"
-# install dependencies
 install:
+  # development/testing dependencies
   - pip install -r requirements.txt
   - pip install --editable .
 # run tests

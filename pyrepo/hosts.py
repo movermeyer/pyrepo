@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     This module provides the repository Host type and common Host
-    objects (github, bitbucket).
+    objects (github_host, bitbucket_host).
 """
 
 import re

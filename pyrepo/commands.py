@@ -46,6 +46,9 @@ class Command(object):
         """
         self.name = kwargs["name"]
         self.long_name = kwargs["long_name"]
+        self.init_cmd = kwargs["init_cmd"]
+        self.add_cmd = kwargs["add_cmd"]
+        self.commit_cmd = kwargs["commit_cmd"]
         self.create_cmd = kwargs["create_cmd"]
         self.update_cmd = kwargs["update_cmd"]
         self.tag_list_cmd = kwargs["tag_list_cmd"]
@@ -74,6 +77,18 @@ class Command(object):
             stderr=subprocess.PIPE, 
             cwd=cwd).communicate()
 
+    def init(self, dir=None):
+        """
+        Initializes a repository in the given directory.
+        """
+        return self._run(self.init_cmd, {}, dir)
+
+    def add(self, path, dir=None):
+        return self._run(self.add_cmd, {"path": path}, dir)
+
+    def commit(self, message, dir=None):
+        return self._run(self.commit_cmd, {"message": message}, dir)
+
     def clone(self, repo_url, target):
         """
         Runs the command to clone/create a new repository.
@@ -83,12 +98,12 @@ class Command(object):
         return self._run(self.create_cmd, 
                          {"repo_url": repo_url, "target": target})
 
-    def update(self, cwd=None):
+    def update(self, dir=None):
         """
         Runs the command to update a repo, from the given `cwd`
         directory
         """
-        return self._run(self.update_cmd, {})
+        return self._run(self.update_cmd, {}, dir)
 
     def tag_list(self, cwd=None):
         """
@@ -115,6 +130,9 @@ class Command(object):
 git_command = Command(
     name="git",
     long_name="Git",
+    init_cmd="init",
+    add_cmd="add {path}",
+    commit_cmd="commit -m '{message}'",
     create_cmd="clone {repo_url} {target}",
     update_cmd="pull --ff-only",
     tag_list_cmd=TagCmd("show-ref", 
@@ -127,3 +145,4 @@ git_command = Command(
 
 
 default_commands = [git_command]
+
