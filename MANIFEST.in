@@ -1,4 +1,4 @@
-include AUTHORS.rst CHANGES.rst DESCRIPTION.rst LICENSE 
+include AUTHORS.rst CHANGES.rst DESCRIPTION.rst LICENSE
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo

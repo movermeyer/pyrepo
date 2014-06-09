@@ -32,7 +32,7 @@ class Repository(object):
         Arguments are the same as :class:`Command.clone 
         <commands.Command.clone>` arguments.
         """
-        return self.command.create(*args, **kwargs)
+        return self.command.clone(self.url, *args, **kwargs)
 
     def update(self, *args, **kwargs):
         """

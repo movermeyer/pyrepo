@@ -53,7 +53,15 @@ To get the source from Github
 
     $ git clone git@github.com:dghubble/pyrepo.git
     $ cd pyrepo
+    $ pip install -r requirements.txt
     $ python setup.py develop
+
+If you want to remove the development install
+
+.. code-block:: bash
+
+    $ cd pyrepo
+    $ python setup.py develop --uninstall
 
 
 Testing
@@ -62,7 +70,6 @@ Testing
 .. code-block:: bash
 
     $ pip install nose
-    $ cd pyrepo
     $ nosetests
     ....
     ----------------------------------------------------------------------
@@ -74,25 +81,10 @@ Testing
 Questions, Comments, Contact
 ----------------------------
 
-If you'd like to contact me, you can Tweet to `@dghubble <https://twitter.com/dghubble>`_ or email dghubble@gmail.com.
+If you'd like to contact me, feel free to Tweet to `@dghubble <https://twitter.com/dghubble>`_ or email dghubble@gmail.com.
 
 
 License
 -------
 
 `MIT License <LICENSE>`_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
