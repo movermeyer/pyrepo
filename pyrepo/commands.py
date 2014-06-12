@@ -126,7 +126,7 @@ class Command(object):
         """
         return self._run(self.ping_cmd, {"scheme": scheme, "repo": repo}, cwd)
 
-
+#: Git command definition
 git_command = Command(
     name="git",
     long_name="Git",
@@ -143,6 +143,24 @@ git_command = Command(
     schemes=["git", "https", "http", "git+ssh"],
     ping_cmd="ls-remote {scheme}://{repo_root}")
 
+# TODO: support branch tag names
 
-default_commands = [git_command]
+#: Mercurial command definition
+hg_command = Command(
+    name="hg",
+    long_name="Mercurial",
+    init_cmd="?",
+    add_cmd="?",
+    commit_cmd="?",
+    create_cmd="clone -U {repo_url} {target}",
+    update_cmd="pull",
+    tag_list_cmd=TagCmd("tags", re.compile('^(\S+)')),
+    tag_lookup_cmd="?",
+    tag_sync_cmd="update -r {tag}",
+    tag_sync_default_cmd="update default",
+    schemes=['https', 'http', 'ssh'],
+    ping_cmd="identify {scheme}://{repo_root}")
+
+#: default set of commands for repositories
+default_commands = [git_command, hg_command]
 

@@ -71,9 +71,9 @@ Testing
 
     $ pip install nose
     $ nosetests
-    ....
+    ............
     ----------------------------------------------------------------------
-    Ran 4 tests in 0.326s
+    Ran 12 tests in 0.707s
 
     OK
 

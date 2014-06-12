@@ -9,28 +9,71 @@ from . import hosts
 from . import commands
 import re
 
+# TODO: accept a custom RepoImporter
 class Repository(object):
     """
-    Representation of a repository which is identified by an import_path
-    , managed by a :class:`Command <commands.Command>` object, and 
-    hosted at some url.
+    Representation of a repository which is managed by a 
+    :class:`Command <commands.Command>` object, and hosted at some url.
+
+    A Repository object may be constructed from a `command` and `url`
+    directly, or a respository `import_path` can be provided which will
+    resolve the `command` or `url`, if they aren't provided.
+
+    Usage::
+
+        from pyrepo import git_command as git
+
+        # uses the command and url as given
+        repo = Repository(command=git,
+            url='https://github.com/dghubble/pyrepo.git')
+
+        # determines correct repository url
+        repo = Repository(command=git, 
+            import_path='github.com/dghubble/pyrepo')
+
+        # determines correct command and repository url
+        repo = Repository(import_path='github.com/dghubble/pyrepo')
+        
+        # operations
+        home = os.path.expanduser('~')
+        repo.clone(home)
     """
 
-    def __init__(self, identifier, url, command):
+    def __init__(self, command=None, url=None, import_path=None):
         """
         :param str identifier: import path identifying a repository
         :param str url: url from which the repo can be fetched
         :param command: :class:`Command <commands.Command>` for managing 
             the repo
+
         """
-        self.identifier = identifier
-        self.url = url
-        self.command = command
+        if url is None or command is None:
+            # must resolve the import_path against hosts
+            if import_path is None:
+                raise ValueError(("Repository construction requires 1)"
+                    " a `url` and `command` or 2) an `import_path`."))
+
+            # Resolve command and url, may throw ImportPathError
+            (resCommand, resUrl) = RepoImporter().resolve(import_path)
+            self.command = command or resCommand
+            self.url = url or resUrl
+            self.import_path = import_path
+        else:
+            # url and command are both non-None, no additional checks
+            self.command = command
+            self.url = url
+            self.import_path = None  
 
     def clone(self, *args, **kwargs):
         """
-        Arguments are the same as :class:`Command.clone 
-        <commands.Command.clone>` arguments.
+        Calls :class:`Command.clone <commands.Command.clone>` with the 
+        repository `url` positional argument, followed by the given 
+        positional args and keyword kwargs.
+
+        Usage::
+
+            # clone the repository into the home directory
+            repo.clone(os.path.expanduser('~'))
         """
         return self.command.clone(self.url, *args, **kwargs)
 
@@ -62,12 +105,6 @@ class RepoImporter(object):
     <Repository>` object by determining the repository host, the 
     repository command, the scheme of the repository, and with that
     information, the remote url.
-
-    Usage::
-
-        importer = RepoImporter()
-        repo = importer.repo("github.com/dghubble/pyrepo")
-        repo.clone()
     """
     DEFAULT_HOSTS = hosts.default_hosts
     DEFAULT_COMMANDS = commands.default_commands
@@ -109,7 +146,8 @@ class RepoImporter(object):
                 .format(command_name, host.name))
         # TODO: start respecting per-host scheme
         url = self._build_url(import_path, host, None)
-        return Repository(identifier=import_path, url=url, command=command)
+        return (command, url)
+        # return Repository(command=command, url=url, import_path=import_path)
 
     def _validate_import_path(self, import_path):
         if "://" in import_path:
