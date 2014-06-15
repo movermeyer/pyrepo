@@ -33,8 +33,12 @@ Usage
 
 .. code-block:: pycon
 
+    >>> import os
     >>> from pyrepo import Repository, git_command
-    >>> repo = Repository(command=git_command, import_path="github.com/dghubble/pyrepo")
+    >>> home = os.path.expanduser('~')
+    >>> repo = Repository(command=git_command, 
+                          url='https://github.com/dghubble/pyrepo.git')
+    >>> repo2 = Repository(import_path="github.com/dghubble/pyrepo")
     >>> repo.clone()
     >>> repo.update()
 
@@ -73,7 +77,7 @@ Testing
     $ nosetests
     ............
     ----------------------------------------------------------------------
-    Ran 12 tests in 0.707s
+    Ran 14 tests in 0.707s
 
     OK
 

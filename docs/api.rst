@@ -8,6 +8,8 @@ This documentation covers the interfaces exposed by Pyrepo.
 Repositories
 -------------
 
+.. currentmodule:: pyrepo.repo
+
 .. autoclass:: Repository
     :members:
 
@@ -25,7 +27,11 @@ Commands
 .. autoclass:: Command
     :members:
 
+.. autoclass:: TagCommand
+    :members:
+
 .. autodata:: git_command
+.. autodata:: hg_command
 .. autodata:: default_commands
 
 Hosts

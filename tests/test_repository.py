@@ -10,9 +10,10 @@ import tempfile
 import unittest
 import subprocess
 
-from pyrepo import (Repository, RepoImporter, git_command, 
-    ImportPathError, hg_command)
-from test_utils import MockSourceRepo
+from pyrepo import Repository, ImportPathError
+from pyrepo import git_command, hg_command
+from pyrepo.repo import RepoImporter
+from utils import MockSourceRepo
 
 class InitRepositoryTestCase(unittest.TestCase):
 

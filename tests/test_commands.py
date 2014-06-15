@@ -11,7 +11,7 @@ import subprocess
 import os
 
 from pyrepo import git_command, hg_command
-from test_utils import MockSourceRepo
+from utils import MockSourceRepo
 
 class CommandTestBase():
     """

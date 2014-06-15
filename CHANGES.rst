@@ -3,22 +3,24 @@ Changelog
 
 Notable changes between releases.
 
-0.1.2 (?)
-------------------
+0.1.2 (2014-06-15)
+-------------------
+
+* Improved documentation coverage
 
 **Features**
 
-* Provide a repository abstraction
-* Support the Git command's simplest subcommands (clone, update)
-* Support Github and Bitbucket hosts
-* Provide a utility to map between import paths and repositories
+* Provides a repository abstraction (clone, update, tag_list)
+* Supports repository creation via command/url or via import_path
+* Supports Git and Mercurial Command (init, add, commit, clone, update, tag_list subcommands)
+* Supports Github and Bitbucket hosts (Git-only)
 
 0.1.1 (2014-06-08)
 -------------------
 
-* Fix Repository create -> clone command delegation
-* Add uninstall notes to README
-* Add version.py single-source version getter module
+* Fixed Repository create -> clone command delegation
+* Added uninstall notes to README
+* Added version.py single-source version getter module
 
 0.1.0 (2014-06-01)
 -------------------

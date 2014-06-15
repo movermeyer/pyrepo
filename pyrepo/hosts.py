@@ -30,8 +30,8 @@ class Host(object):
         self.name = kwargs["name"]
         self.prefix = kwargs["prefix"]
         self.pattern = re.compile(kwargs["pattern"])
-        self.command_name_func = command_name_func
         self.command_name = kwargs["command_name"]
+        self.command_name_func = command_name_func
         self.url_format = kwargs["url_format"]
         if self.command_name_func is None and self.command_name is None:
             raise ValueError(("Host {0} `command_name` and" 

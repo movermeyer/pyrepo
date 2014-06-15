@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    This module defines Command, the representation of binary commands 
+    This module provides Command, the representation of binary commands 
     used to fetch and manage repositories.
 """
 
@@ -8,9 +8,9 @@ import subprocess
 import re
 
 
-class TagCmd(object):
+class TagCommand(object):
     """
-    Represents a command to list available tags to sync to.
+    Represents a command to list tags to sync onto.
     """
 
     def __init__(self, cmd, pattern):
@@ -24,24 +24,31 @@ class TagCmd(object):
 
 class Command(object):
     """
-    Represents a version control system (such as Git, Mercurial, etc.) 
-    and its usage.
+    Represents a repository management command (e.g. Git, Mercurial) and 
+    its usage.
     """
 
     def __init__(self, **kwargs):
         """
         Make a repository management command.
 
-        :param name: name of the version control system
-        :param cmd: name of binary for version control system command
-        :param create_cmd: command to clone a fresh copy of a repo
-        :param update_cmd: command to download updates into existing 
-            repo
-        :param tag_list_cmd: command to list tags
-        :param tag_sync_cmd: command to sync to specific tag
-        :param tag_sync_default_cmd: command to sync to default tag
-        :param schemes: vcs scheme names
-        :param ping_cmd: command to ping for scheme
+        :param str name: executable binary command name (e.g. 'hg')
+        :param str long_name: long command name (e.g. 'Mercurial')
+        :param str init_cmd: command to initialize a repository
+        :param str add_cmd: command to add a {path} to staging
+        :param str commit_cmd: commit a changeset to the repo with a
+            commit {message}
+        :param str create_cmd: command to clone a fresh repository copy
+            from {repo_url} to {target_path}
+        :param str update_cmd: command to download updates into existing 
+            repository
+        :param TagCommand tag_list_cmd: command to 
+            list repository tags
+        :param str tag_sync_cmd: command to sync to a specific tag
+        :param str tag_sync_default_cmd: command to sync to the default 
+            tag
+        :param list schemes: scheme names
+        :param str ping_cmd: command to ping for scheme
         """
         self.name = kwargs["name"]
         self.long_name = kwargs["long_name"]
@@ -87,14 +94,16 @@ class Command(object):
     def commit(self, message, dir=None):
         return self._run(self.commit_cmd, {"message": message}, dir)
 
-    def clone(self, repo_url, target):
+    def clone(self, repo_url, target_path):
         """
         Runs the command to clone/create a new repository.
         :params repi_url: url to remote repo or path to local repo
         :params target: path to intended destination for repo
         """
-        return self._run(self.create_cmd, 
-                         {"repo_url": repo_url, "target": target})
+        return self._run(
+            self.create_cmd, 
+            {"repo_url": repo_url, 
+             "target_path": target_path})
 
     def update(self, dir=None):
         """
@@ -131,9 +140,9 @@ git_command = Command(
     init_cmd="init",
     add_cmd="add {path}",
     commit_cmd="commit -m '{message}'",
-    create_cmd="clone {repo_url} {target}",
+    create_cmd="clone {repo_url} {target_path}",
     update_cmd="pull --ff-only",
-    tag_list_cmd=TagCmd("show-ref", 
+    tag_list_cmd=TagCommand("show-ref", 
                         re.compile('(?:tags|origin)/(?P<tag>\S+)$')),
     tag_sync_cmd="checkout {tag}",
     tag_sync_default_cmd="checkout master",
@@ -147,11 +156,11 @@ hg_command = Command(
     name="hg",
     long_name="Mercurial",
     init_cmd="init",
-    add_cmd="add",
+    add_cmd="add {path}",
     commit_cmd="commit -m {message}",
-    create_cmd="clone {repo_url} {target}",
+    create_cmd="clone {repo_url} {target_path}",
     update_cmd="pull",
-    tag_list_cmd=TagCmd("tags", re.compile('^(\S+)')),
+    tag_list_cmd=TagCommand("tags", re.compile('^(\S+)')),
     tag_lookup_cmd="?",
     tag_sync_cmd="update -r {tag}",
     tag_sync_default_cmd="update default",

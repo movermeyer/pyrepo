@@ -1,4 +1,5 @@
 include AUTHORS.rst CHANGES.rst DESCRIPTION.rst LICENSE
+global-include VERSION
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo

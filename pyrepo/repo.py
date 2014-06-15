@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    This module provides a Repository and a RepoImporter. The Repository
-    allows managing a general repository via its command. A RepoImporter
-    simplifies constructing Repositories from import paths.
+    This module provides a Repository abstraction to allow a file 
+    repository to be managed on-disk, via a Pythonic API.
 """
 
 from . import hosts
@@ -20,32 +19,32 @@ class Repository(object):
     resolve the `command` or `url`, if they aren't provided.
 
     Usage::
-
+        
         from pyrepo import git_command as git
 
-        # uses the command and url as given
-        repo = Repository(command=git,
-            url='https://github.com/dghubble/pyrepo.git')
-
-        # determines correct repository url
         repo = Repository(command=git, 
-            import_path='github.com/dghubble/pyrepo')
+                          url='https://github.com/dghubble/pyrepo.git')
 
-        # determines correct command and repository url
+        # autodetects the correct repository url
+        repo = Repository(command=git, 
+                          import_path='github.com/dghubble/pyrepo')
+
+        # autdetects the correct command and repository url
         repo = Repository(import_path='github.com/dghubble/pyrepo')
-        
-        # operations
-        home = os.path.expanduser('~')
-        repo.clone(home)
+
     """
 
     def __init__(self, command=None, url=None, import_path=None):
         """
-        :param str identifier: import path identifying a repository
-        :param str url: url from which the repo can be fetched
-        :param command: :class:`Command <commands.Command>` for managing 
-            the repo
+        Provide either the `command` and `url` or provide an `import_path`.
 
+        :param Command command: (optional) 
+            :class:`Command <commands.Command>` for managing
+            the repository
+        :param str url: (optional) url where the repo can be found
+        :param str import_path: (optional) import path of the repository
+            (e.g. github.com/dghubble/pyrepo)
+        :raises: ValueError, :class:`ImportPathError <ImportPathError>`
         """
         if url is None or command is None:
             # must resolve the import_path against hosts
@@ -72,8 +71,9 @@ class Repository(object):
 
         Usage::
 
-            # clone the repository into the home directory
-            repo.clone(os.path.expanduser('~'))
+            target_dir = os.path.expanduser('~')
+            # clone the repository into the target directory (e.g. home)
+            repo.clone(target_dir)
         """
         return self.command.clone(self.url, *args, **kwargs)
 
@@ -91,20 +91,11 @@ class Repository(object):
         """
         return self.command.tag_list(*args, **kwargs)
 
-    def ping(self, *args, **kwargs):
-        """
-        Arguments are the same as :class:`Command.ping 
-        <commands.Command.ping>` arguments.
-        """
-        return self.command.ping(*args, **kwargs)
-
 
 class RepoImporter(object):
     """
-    Utility for resolving an import path to a :class:`Repository 
-    <Repository>` object by determining the repository host, the 
-    repository command, the scheme of the repository, and with that
-    information, the remote url.
+    Utility for resolving an import path to a `url` and a
+    :class:`Command <commands.Command>`.
     """
     DEFAULT_HOSTS = hosts.default_hosts
     DEFAULT_COMMANDS = commands.default_commands
@@ -127,12 +118,12 @@ class RepoImporter(object):
     
     def resolve(self, import_path):
         """
-        Resolves an import path to a :class:`Repository 
-        <Repository>`.
+        Resolves an import path to a
+        (:class:`Command <commands.Command>`, `url`) tuple.
 
         :param str import_path: import path identifying a repository.
-        :returns: :class:`Repository <Repository>` corresponding to the 
-            import path 
+        :returns: (:class:`Command <commands.Command>`, `url`) tuple
+            corresponding to the `import_path`
         :raises: :class:`ImportPathError <ImportPathError>`
         """
         self._validate_import_path(import_path)
@@ -147,7 +138,6 @@ class RepoImporter(object):
         # TODO: start respecting per-host scheme
         url = self._build_url(import_path, host, None)
         return (command, url)
-        # return Repository(command=command, url=url, import_path=import_path)
 
     def _validate_import_path(self, import_path):
         if "://" in import_path:
@@ -215,8 +205,8 @@ class RepoImporter(object):
 
 class ImportPathError(Exception):
     """
-    Raised when a :class:`RepoImporter <RepoImporter>` cannot create a 
-    :class:`Repository <Repository>` object from an import path.
+    Raised when a :class:`RepoImporter <RepoImporter>` cannot resolve
+    an `import_path`.
     """
     pass
 
