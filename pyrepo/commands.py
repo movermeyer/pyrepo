@@ -38,7 +38,6 @@ class Command(object):
         :param update_cmd: command to download updates into existing 
             repo
         :param tag_list_cmd: command to list tags
-        :param tag_lookup_cmd: command to lookup tags
         :param tag_sync_cmd: command to sync to specific tag
         :param tag_sync_default_cmd: command to sync to default tag
         :param schemes: vcs scheme names
@@ -52,7 +51,6 @@ class Command(object):
         self.create_cmd = kwargs["create_cmd"]
         self.update_cmd = kwargs["update_cmd"]
         self.tag_list_cmd = kwargs["tag_list_cmd"]
-        self.tag_lookup_cmd = kwargs["tag_lookup_cmd"]
         self.tag_sync_cmd = kwargs["tag_sync_cmd"]
         self.tag_sync_default_cmd = kwargs["tag_sync_cmd"]
         self.schemes = kwargs["schemes"]
@@ -137,7 +135,6 @@ git_command = Command(
     update_cmd="pull --ff-only",
     tag_list_cmd=TagCmd("show-ref", 
                         re.compile('(?:tags|origin)/(?P<tag>\S+)$')),
-    tag_lookup_cmd="show-ref tags/{tag} origin/{tag}",
     tag_sync_cmd="checkout {tag}",
     tag_sync_default_cmd="checkout master",
     schemes=["git", "https", "http", "git+ssh"],
@@ -149,10 +146,10 @@ git_command = Command(
 hg_command = Command(
     name="hg",
     long_name="Mercurial",
-    init_cmd="?",
-    add_cmd="?",
-    commit_cmd="?",
-    create_cmd="clone -U {repo_url} {target}",
+    init_cmd="init",
+    add_cmd="add",
+    commit_cmd="commit -m {message}",
+    create_cmd="clone {repo_url} {target}",
     update_cmd="pull",
     tag_list_cmd=TagCmd("tags", re.compile('^(\S+)')),
     tag_lookup_cmd="?",
