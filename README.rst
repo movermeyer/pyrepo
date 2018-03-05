@@ -1,7 +1,7 @@
 Pyrepo
 ======
 
-.. image:: https://pypip.in/version/pyrepo/badge.png
+.. image:: https://img.shields.io/pypi/v/pyrepo.svg
     :target: https://pypi.python.org/pypi/pyrepo/
     :alt: Latest Version
 
@@ -9,11 +9,11 @@ Pyrepo
     :target: https://travis-ci.org/dghubble/pyrepo
     :alt: Continuous Integration Testing
 
-.. image:: https://pypip.in/download/pyrepo/badge.png
+.. image:: https://img.shields.io/pypi/dm/pyrepo.svg
     :target: https://pypi.python.org/pypi/pyrepo/
     :alt: Downloads
 
-.. image:: https://pypip.in/license/pyrepo/badge.png
+.. image:: https://img.shields.io/pypi/l/pyrepo.svg
     :target: https://pypi.python.org/pypi/pyrepo/
     :alt: License
 
